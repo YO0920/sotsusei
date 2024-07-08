@@ -10,13 +10,18 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+         <link rel="stylesheet" href="/css/color.css">
+         
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased background-color">
+        <div class="min-h-screen">
+            <!--ここに共通ヘッダーのコンポーネントを埋め込む-->
+            @include('layouts.announce-header')
 
             <!-- Page Heading -->
             @if (isset($header))
@@ -32,5 +37,6 @@
                 {{ $slot }}
             </main>
         </div>
+    <!--@include('layouts.footer')-->
     </body>
 </html>
