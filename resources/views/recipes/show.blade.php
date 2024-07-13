@@ -4,7 +4,7 @@
        <!--レシピ詳細-->
         <div class="grid grid-cols-2 rounded border border-gray-500 mt-4">
             <div class="col-span-1">
-                <img class="object-cover w-full aspect-square" src="{{$recipe['image']}}" alt={{$recipe['title']}}">
+                <img class="object-cover w-full aspect-square" src="{{ asset($recipe->image) }}" alt={{$recipe['title']}}">
             </div>
             <div class="col-span-1 p-4">
                 <p class="text-2xl font-bold mb-2 mt-4">{{$recipe['title']}}</p>
