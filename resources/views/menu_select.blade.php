@@ -106,7 +106,8 @@
                 .then(data => {
                     const card = document.getElementById(`recipe-card-${category}-${index}`);
                     card.querySelector('a').setAttribute('href', `/recipe/show/${data.id}`);
-                    card.querySelector('img').setAttribute('src', data.image);
+                    const assetUrl = "{{ asset('') }}".trim();  // asset関数のベースURLを取得
+                    card.querySelector('img').setAttribute('src', `${assetUrl}${data.image}`);
                     card.querySelector('img').setAttribute('alt', data.title);
                     card.querySelector('h5').textContent = data.title;
                 });
