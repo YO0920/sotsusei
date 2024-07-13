@@ -15,7 +15,7 @@ class RecipeController extends Controller
     public function home()
     {
         $recipes = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
-            ->orderBy('recipes.created_at', 'desc') //☆ここをどう変える？？
+            ->orderBy('recipes.created_at', 'desc') 
             ->limit(4)
             ->get();
             
@@ -83,6 +83,21 @@ class RecipeController extends Controller
         
     }
     
+ public function menuChange(Request $request)
+{
+    $category = $request->query('category');
+    $mealId = null;
+
+    $recipe = Recipe::select('id', 'title', 'image')
+        ->where('category_id', $category)
+        ->when($mealId, function ($query, $mealId) {
+            return $query->where('meal_id', $mealId);
+        })
+        ->inRandomOrder()
+        ->first();
+
+    return response()->json($recipe);
+}
     
 
     public function index()
