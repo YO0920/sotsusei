@@ -101,7 +101,7 @@
             const category = this.getAttribute('data-category');
             const index = this.getAttribute('data-index');
 
-            fetch(`/menu_change?category=${category}`)
+            fetch(`menu_change?category=${category}`)
                 .then(response => response.json())
                 .then(data => {
                     const card = document.getElementById(`recipe-card-${category}-${index}`);
