@@ -33,7 +33,7 @@
                 <!-- 各カードに一意のIDを追加 -->
                 <div class="recipe-card" id="recipe-card-3-1-{{ $loop->index }}">
                     <a href="{{ route('recipe.show',['id' => $recipe['id']]) }}" class="flex flex-col items-center bg-white mb-6 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100">
-                        <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{$recipe->image}}" alt="{{$recipe->title}}">
+                        <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{ asset($recipe->image) }}" alt="{{$recipe->title}}">
                         <div class="flex justify-between p-4 leading-normal">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-800">{{$recipe->title}}</h5>
                                 <div class="flex">
@@ -53,7 +53,7 @@
                 <!-- 各カードに一意のIDを追加 -->
                 <div class="recipe-card" id="recipe-card-3-2-{{ $loop->index }}">
                   <a href="{{ route('recipe.show',['id' => $recipe['id']]) }}" class="flex flex-col items-center bg-white mb-6 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100">
-                      <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{$recipe->image}}" alt="{{$recipe->title}}">
+                      <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{ asset($recipe->image) }}" alt="{{$recipe->title}}">
                       <div class="flex justify-between p-4 leading-normal">
                           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-800">{{$recipe->title}}</h5>
                           <div class="flex">
@@ -72,7 +72,7 @@
                  <!-- 各カードに一意のIDを追加 --> 
                 <div class="recipe-card" id="recipe-card-1-{{ $loop->index }}">
                     <a href="{{ route('recipe.show',['id' => $recipe['id']]) }}" class="flex flex-col items-center bg-white mb-6 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100">
-                        <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{$recipe->image}}" alt="{{$recipe->title}}">
+                        <img class="object-cover rounded-t-lg h-40 w-40 mrounded-none rounded-l-lg" src="{{ asset($recipe->image) }}" alt="{{$recipe->title}}">
                         <div class="flex justify-between p-4 leading-normal">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-800">{{$recipe->title}}</h5>
                                 <div class="flex">
