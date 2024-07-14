@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/menu_change', [RecipeController::class, 'menuChange'])->name('menu.change');
+    Route::post('/menu_store', [RecipeController::class, 'storeMenu'])->name('menu_store');
     
 });
 

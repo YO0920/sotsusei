@@ -10,10 +10,10 @@ class Recipe extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
-    protected $casts = [
+        protected $casts = [
          'id' => 'string'
     ];
+
     
         public function category()
     {
