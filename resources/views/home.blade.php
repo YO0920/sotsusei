@@ -206,7 +206,7 @@
                 <option value="lunch">昼ごはん</option>
                 <option value="dinner">夜ごはん</option>
             </select>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm">OK</button>
+            <button type="submit" class="header-color text-white px-4 py-2 rounded-md shadow-sm">OK</button>
         </div>
     </form>
 </div>
