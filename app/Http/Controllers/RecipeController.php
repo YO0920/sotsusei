@@ -16,39 +16,20 @@ class RecipeController extends Controller
      */
     public function home()
     {
-               // ログインしているユーザーのメニューを取得
+         // ログインしているユーザーのメニューを取得
         $userId = auth()->user()->id;
         $menuSaves = MenuSave::where('user_id', $userId)
+            ->with([
+                'breakfastCategory1', 'breakfastCategory2', 'breakfastCategory3_1', 'breakfastCategory3_2',
+                'lunchCategory1', 'lunchCategory2', 'lunchCategory3_1', 'lunchCategory3_2',
+                'dinnerCategory1', 'dinnerCategory2', 'dinnerCategory3_1', 'dinnerCategory3_2'
+            ])
             ->orderBy('date', 'asc')
-            ->with(['breakfastCategory1', 'breakfastCategory2', 'breakfastCategory3_1', 'breakfastCategory3_2', 'lunchCategory1', 'lunchCategory2', 'lunchCategory3_1', 'lunchCategory3_2', 'dinnerCategory1', 'dinnerCategory2', 'dinnerCategory3_1', 'dinnerCategory3_2'])
-            ->get();
+            ->get()
+            ->groupBy('date');
 
         return view('home', compact('menuSaves'));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        $recipes = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
-            ->orderBy('recipes.created_at', 'desc') 
-            ->limit(4)
-            ->get();
-            
-            // dd($recipes);
-        
-        return view ('home', compact('recipes'));
+ 
     }
     
     public function menu_select(Request $request)
