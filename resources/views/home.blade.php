@@ -194,7 +194,7 @@
     </div>
     
 <div class="bg-white rounded p-4 shadow-lg fixed bottom-0 left-0 w-full h-32 flex flex-col items-center justify-center">
-    <p class="text-2xl font-bold mb-4 text-center">メニューを決める</p>
+    <p class="text-1xl font-bold mb-4 text-center">メニューを決める</p>
     <form action="{{ route('menu_select') }}" method="GET" class="flex items-center space-x-4">
         @csrf
         <div class="flex items-center space-x-4">
