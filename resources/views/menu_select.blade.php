@@ -104,7 +104,7 @@
                     .then(response => response.json())
                     .then(data => {
                         const card = document.getElementById(`recipe-card-${category}-${index}`);
-                        card.querySelector('a').setAttribute('href', `/recipes/${data.id}`);
+                        card.querySelector('a').setAttribute('href', `/sotsusei/recipes/${data.id}`);
                         const assetUrl = "{{ asset('') }}".trim();  // asset関数のベースURLを取得
                         card.querySelector('img').setAttribute('src', `${assetUrl}${data.image}`);
                         card.querySelector('img').setAttribute('alt', data.title);
