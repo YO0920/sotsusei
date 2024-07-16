@@ -210,39 +210,33 @@
         </div>
     </form>
 </div>
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
-      const dateInput = document.getElementById('date');
-      const wrapper = dateInput.parentElement;
+        const dateInput = document.getElementById('date');
 
-      // 今日の日付を取得
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-      const dd = String(today.getDate()).padStart(2, '0');
-      const todayStr = `${yyyy}-${mm}-${dd}`;
+        // 今日の日付を取得
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
 
-      // 1週間後の日付を取得
-      const nextWeek = new Date();
-      nextWeek.setDate(today.getDate() + 7);
-      const yyyyNextWeek = nextWeek.getFullYear();
-      const mmNextWeek = String(nextWeek.getMonth() + 1).padStart(2, '0');
-      const ddNextWeek = String(nextWeek.getDate()).padStart(2, '0');
-      const nextWeekStr = `${yyyyNextWeek}-${mmNextWeek}-${ddNextWeek}`;
+        // 1週間後の日付を取得
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+        const yyyyNextWeek = nextWeek.getFullYear();
+        const mmNextWeek = String(nextWeek.getMonth() + 1).padStart(2, '0');
+        const ddNextWeek = String(nextWeek.getDate()).padStart(2, '0');
+        const nextWeekStr = `${yyyyNextWeek}-${mmNextWeek}-${ddNextWeek}`;
 
-      // デフォルトの日付、最小、最大の日付を設定
-      dateInput.value = todayStr;
-      dateInput.min = todayStr;
-      dateInput.max = nextWeekStr;
-
-      wrapper.addEventListener('click', () => {
-        dateInput.focus();
-      });
-
-      dateInput.addEventListener('change', () => {
-        console.log('選択された日付: ', dateInput.value);
-      });
+        // デフォルトの日付、最小、最大の日付を設定
+        dateInput.value = todayStr;
+        dateInput.min = todayStr;
+        dateInput.max = nextWeekStr;
     });
-  </script>
+</script>
+
+
+
 </x-app-layout>
 
