@@ -1,13 +1,16 @@
 <x-guest-layout>
     @if (Route::has('login'))
-    <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+    <div class="fixed top-0 right-0 px-6 py-4 items-center sm:flex sm:justify-end sm:w-full sm:static">
         @auth
             <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Dashboard</a>
         @else
+         
+         <div class="w-full sm:w-auto flex justify-center sm:justify-end">
             <a href="{{ route('login') }}" class="text-1xl text-white underline">Log in</a>
+        </div>
 
             @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="ml-4 text-1xl text-white underline">Register</a>
+                <!--<a href="{{ route('register') }}" class="ml-4 text-1xl text-white underline">Register</a>-->
             @endif
         @endauth
     </div>
