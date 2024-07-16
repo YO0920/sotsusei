@@ -201,7 +201,7 @@
             <!--<label for="date" class="block text-gray-700">日付をえらぶ</label>-->
             <input type="date" name="date" id="date" class="mt-1 block rounded-md border-gray-300 shadow-sm">
             <!--<label for="meal-select" class="block text-gray-700">いつ食べる？</label>-->
-            <select name="meal" id="meal-select" class="mt-1 block rounded-md border-gray-300 shadow-sm">
+            <select name="meal" id="meal-select" class="mt-1 block rounded-md border-gray-300 shadow-sm h-10 w-24">
                 <option value="breakfast">朝ごはん</option>
                 <option value="lunch">昼ごはん</option>
                 <option value="dinner">夜ごはん</option>
@@ -210,5 +210,39 @@
         </div>
     </form>
 </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('date');
+      const wrapper = dateInput.parentElement;
+
+      // 今日の日付を取得
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      // 1週間後の日付を取得
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 7);
+      const yyyyNextWeek = nextWeek.getFullYear();
+      const mmNextWeek = String(nextWeek.getMonth() + 1).padStart(2, '0');
+      const ddNextWeek = String(nextWeek.getDate()).padStart(2, '0');
+      const nextWeekStr = `${yyyyNextWeek}-${mmNextWeek}-${ddNextWeek}`;
+
+      // デフォルトの日付、最小、最大の日付を設定
+      dateInput.value = todayStr;
+      dateInput.min = todayStr;
+      dateInput.max = nextWeekStr;
+
+      wrapper.addEventListener('click', () => {
+        dateInput.focus();
+      });
+
+      dateInput.addEventListener('change', () => {
+        console.log('選択された日付: ', dateInput.value);
+      });
+    });
+  </script>
 </x-app-layout>
 
