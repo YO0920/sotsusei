@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Recipe;
-use App\Models\MenuSave; // これを追加
+use App\Models\MenuSave;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str; // これを追加
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class RecipeController extends Controller
 {
@@ -16,9 +16,19 @@ class RecipeController extends Controller
      */
     public function home()
     {
-         // ログインしているユーザーのメニューを取得
+        // ログインしているユーザーのメニューを取得
         $userId = auth()->user()->id;
+
+        // 現在の日付を取得
+        $today = Carbon::today();
+
+        // 1週間前と1週間後の日付を取得
+        $startDate = $today->copy()->subWeek();
+        $endDate = $today->copy()->addWeek();
+
+        // メニューのデータを取得してフィルタリング
         $menuSaves = MenuSave::where('user_id', $userId)
+            ->whereBetween('date', [$startDate, $endDate])
             ->with([
                 'breakfastCategory1', 'breakfastCategory2', 'breakfastCategory3_1', 'breakfastCategory3_2',
                 'lunchCategory1', 'lunchCategory2', 'lunchCategory3_1', 'lunchCategory3_2',
@@ -29,12 +39,11 @@ class RecipeController extends Controller
             ->groupBy('date');
 
         return view('home', compact('menuSaves'));
- 
     }
-    
+
     public function menu_select(Request $request)
     {
-         $validatedData = $request->validate([
+        $validatedData = $request->validate([
             'date' => 'required|date',
             'meal' => 'required|string|in:breakfast,lunch,dinner',
         ]);
@@ -42,84 +51,75 @@ class RecipeController extends Controller
         // 選択した日付と食事の種類を取得
         $date = $validatedData['date'];
         $meal = $validatedData['meal'];
-      // mealIdを初期化
-    $mealId = null;
-    
-    if ($request->has('meal')) {
-        // フォームから送信されたmealの値を取得
-        $meal = $request->input('meal');
-        
-        // mealの値を基にmeal_idを設定
-        if ($meal === 'breakfast') {
-            $mealId = 1;
-        } elseif ($meal === 'lunch') {
-            $mealId = 2;
-        } elseif ($meal === 'dinner') {
-            $mealId = 3;
+
+        // mealIdを初期化
+        $mealId = null;
+
+        if ($request->has('meal')) {
+            // フォームから送信されたmealの値を取得
+            $meal = $request->input('meal');
+
+            // mealの値を基にmeal_idを設定
+            if ($meal === 'breakfast') {
+                $mealId = 1;
+            } elseif ($meal === 'lunch') {
+                $mealId = 2;
+            } elseif ($meal === 'dinner') {
+                $mealId = 3;
+            }
         }
-    }
-            
+
         $recipes_category1 = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
             ->where('recipes.category_id', 1)
             ->inRandomOrder()
             ->limit(1)
             ->get();
-            
+
         // カテゴリ2のレシピをランダムに1つ取得
         $recipes_category2 = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
-        ->where('recipes.category_id', 2)
-        ->when($mealId, function ($query, $mealId) {
-            return $query->where('recipes.meal_id', $mealId);
-        })
-        ->inRandomOrder()
-        ->limit(1)
-        ->get();
-            
+            ->where('recipes.category_id', 2)
+            ->when($mealId, function ($query, $mealId) {
+                return $query->where('recipes.meal_id', $mealId);
+            })
+            ->inRandomOrder()
+            ->limit(1)
+            ->get();
+
         $recipes_category3_1 = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
             ->where('recipes.category_id', 3)
             ->inRandomOrder()
             ->limit(1)
             ->get();
-            
+
         $recipes_category3_2 = Recipe::select('recipes.id', 'recipes.title', 'recipes.image')
             ->where('recipes.category_id', 3)
             ->inRandomOrder()
             ->limit(1)
-            ->get();    
-            
-            // dd($recipes);
-        
-        return view ('menu_select', compact('date', 'meal','recipes_category1', 'recipes_category2', 'recipes_category3_1', 'recipes_category3_2'));
-    
-        
-        // フォームがまだ送信されていない場合は、単にフォームを表示するだけとする
-        return view('menu_select');
-        
-        
+            ->get();
+
+        return view('menu_select', compact('date', 'meal', 'recipes_category1', 'recipes_category2', 'recipes_category3_1', 'recipes_category3_2'));
     }
-    
- public function menuChange(Request $request)
-{
-    $category = $request->query('category');
-    $mealId = null;
 
-    $recipe = Recipe::select('id', 'title', 'image')
-        ->where('category_id', $category)
-        ->when($mealId, function ($query, $mealId) {
-            return $query->where('meal_id', $mealId);
-        })
-        ->inRandomOrder()
-        ->first();
+    public function menuChange(Request $request)
+    {
+        $category = $request->query('category');
+        $mealId = null;
 
-    return response()->json($recipe);
-}
-    
+        $recipe = Recipe::select('id', 'title', 'image')
+            ->where('category_id', $category)
+            ->when($mealId, function ($query, $mealId) {
+                return $query->where('meal_id', $mealId);
+            })
+            ->inRandomOrder()
+            ->first();
+
+        return response()->json($recipe);
+    }
 
     public function index()
     {
         //
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -134,52 +134,51 @@ class RecipeController extends Controller
      */
     public function storeMenu(Request $request)
     {
-          $validatedData = $request->validate([
-        'date' => 'required|date',
-        'meal' => 'required|string|in:breakfast,lunch,dinner',
-        'recipes_category1' => 'nullable|array',
-        'recipes_category1.*' => 'nullable|uuid',
-        'recipes_category2' => 'nullable|array',
-        'recipes_category2.*' => 'nullable|uuid',
-        'recipes_category3_1' => 'nullable|array',
-        'recipes_category3_1.*' => 'nullable|uuid',
-        'recipes_category3_2' => 'nullable|array',
-        'recipes_category3_2.*' => 'nullable|uuid',
-    ]);
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'meal' => 'required|string|in:breakfast,lunch,dinner',
+            'recipes_category1' => 'nullable|array',
+            'recipes_category1.*' => 'nullable|uuid',
+            'recipes_category2' => 'nullable|array',
+            'recipes_category2.*' => 'nullable|uuid',
+            'recipes_category3_1' => 'nullable|array',
+            'recipes_category3_1.*' => 'nullable|uuid',
+            'recipes_category3_2' => 'nullable|array',
+            'recipes_category3_2.*' => 'nullable|uuid',
+        ]);
 
-    // ユーザーIDは認証されているユーザーから取得
-    $userId = auth()->user()->id;
+        // ユーザーIDは認証されているユーザーから取得
+        $userId = auth()->user()->id;
 
-    $menuSave = new MenuSave;
-    $menuSave->id = Str::uuid();
-    $menuSave->user_id = $userId;
-    $menuSave->date = $validatedData['date'];
+        $menuSave = new MenuSave;
+        $menuSave->id = Str::uuid();
+        $menuSave->user_id = $userId;
+        $menuSave->date = $validatedData['date'];
 
-    switch ($validatedData['meal']) {
-        case 'breakfast':
-            $menuSave->breakfast_category1_id = $validatedData['recipes_category1'][0] ?? null;
-            $menuSave->breakfast_category2_id = $validatedData['recipes_category2'][0] ?? null;
-            $menuSave->breakfast_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
-            $menuSave->breakfast_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
-            break;
-        case 'lunch':
-            $menuSave->lunch_category1_id = $validatedData['recipes_category1'][0] ?? null;
-            $menuSave->lunch_category2_id = $validatedData['recipes_category2'][0] ?? null;
-            $menuSave->lunch_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
-            $menuSave->lunch_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
-            break;
-        case 'dinner':
-            $menuSave->dinner_category1_id = $validatedData['recipes_category1'][0] ?? null;
-            $menuSave->dinner_category2_id = $validatedData['recipes_category2'][0] ?? null;
-            $menuSave->dinner_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
-            $menuSave->dinner_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
-            break;
-    }
+        switch ($validatedData['meal']) {
+            case 'breakfast':
+                $menuSave->breakfast_category1_id = $validatedData['recipes_category1'][0] ?? null;
+                $menuSave->breakfast_category2_id = $validatedData['recipes_category2'][0] ?? null;
+                $menuSave->breakfast_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
+                $menuSave->breakfast_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
+                break;
+            case 'lunch':
+                $menuSave->lunch_category1_id = $validatedData['recipes_category1'][0] ?? null;
+                $menuSave->lunch_category2_id = $validatedData['recipes_category2'][0] ?? null;
+                $menuSave->lunch_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
+                $menuSave->lunch_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
+                break;
+            case 'dinner':
+                $menuSave->dinner_category1_id = $validatedData['recipes_category1'][0] ?? null;
+                $menuSave->dinner_category2_id = $validatedData['recipes_category2'][0] ?? null;
+                $menuSave->dinner_category3_1_id = $validatedData['recipes_category3_1'][0] ?? null;
+                $menuSave->dinner_category3_2_id = $validatedData['recipes_category3_2'][0] ?? null;
+                break;
+        }
 
-    $menuSave->save();
-    
-    return redirect()->route('home')->with('success', 'メニューが保存されました。');
-    
+        $menuSave->save();
+
+        return redirect()->route('home')->with('success', 'メニューが保存されました。');
     }
 
     /**
@@ -187,17 +186,13 @@ class RecipeController extends Controller
      */
     public function show(string $id)
     {
-        $recipe = Recipe::with(['ingredients','steps', 'reviews.user'])
-            ->where('recipes.id',$id)
+        $recipe = Recipe::with(['ingredients', 'steps', 'reviews.user'])
+            ->where('recipes.id', $id)
             ->first();
         $recipe_recode = Recipe::find($id);
-        $recipe_recode->increment('views'); 
-        //リレーションで材料とステップを取得
-        // dd($recipe);
-        
+        $recipe_recode->increment('views');
+
         return view('recipes.show', compact('recipe'));
-    
-        // dd($id);
     }
 
     /**

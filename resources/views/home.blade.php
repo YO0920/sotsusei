@@ -235,8 +235,4 @@
         dateInput.max = nextWeekStr;
     });
 </script>
-
-
-
 </x-app-layout>
-
