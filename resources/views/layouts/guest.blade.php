@@ -24,8 +24,8 @@
             <!--</div>-->
             
             <div>
-                <a href="/" class="block text-white text-4xl font-bold leading-tight">Happi</a>
-                <a href="/" class="text-white text-sm leading-tight">Happy Recipe</a>
+                <a href="{{ route('login') }}" class="block text-white text-4xl font-bold leading-tight">Happi</a>
+                <a href="{{ route('login') }}" class="text-white text-sm leading-tight">Happy Recipe</a>
             </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
